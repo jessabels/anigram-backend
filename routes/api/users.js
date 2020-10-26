@@ -6,8 +6,12 @@ const db = require("../../db/models");
 const { User } = db;
 const { check } = require("express-validator");
 const { asyncHandler, handleValidationErrors } = require("../../utils");
+const { getUserToken, requireAuth } = require("../../auth");
 
-const validateEmailAndPassword = [
+const validateEmailUsernameAndPassword = [
+  check("username")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a username."),
   check("email")
     .exists({ checkFalsy: true })
     .isEmail()
@@ -18,13 +22,18 @@ const validateEmailAndPassword = [
   handleValidationErrors,
 ];
 
+router.get("/", requireAuth, (req, res) => {
+  res.send("success");
+});
+
 router.post(
   "/",
-  validateEmailAndPassword,
+  validateEmailUsernameAndPassword,
   asyncHandler(async (req, res) => {
-    const { email, username, password } = req.body;
+    console.log(req.body);
+    const { username, email, password, avatar } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, hashedPassword });
+    const user = await User.create({ username, email, hashedPassword, avatar });
 
     const token = getUserToken(user);
     res.status(201).json({
