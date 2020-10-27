@@ -14,5 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Post, { foreignKey: "userId" });
     User.hasMany(models.Like, { foreignKey: "userId" });
   };
+
+  User.prototype.validatePassword = function (password) {
+    return bcrypt.compareSync(password, this.hashedPassword.toString());
+  };
+
   return User;
 };

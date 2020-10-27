@@ -2,12 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 
 const usersRouter = require("./routes/api/users");
+const sessionRouter = require("./routes/api/session");
 
 const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api/users", usersRouter);
+app.use("/api/session", sessionRouter);
 
 app.use((req, res, next) => {
   const err = new Error("The requested page couldn't be found.");
