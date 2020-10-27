@@ -32,6 +32,7 @@ router.post(
       err.status = 401;
       err.title = "Login failed";
       err.errors = ["The provided credentials were invalid."];
+      console.error(err);
       return next(err);
     }
 

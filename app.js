@@ -1,10 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const usersRouter = require("./routes/api/users");
 const sessionRouter = require("./routes/api/session");
 
 const app = express();
+
+app.use(cors({ origin: true }));
 
 app.use(morgan("dev"));
 app.use(express.json());
