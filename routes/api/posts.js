@@ -16,6 +16,7 @@ router.get(
 
     const postsData = posts.map((post) => {
       return {
+        postId: post.id,
         imageUrl: post.imageUrl,
         caption: post.caption,
         user: post.User.username,
