@@ -30,17 +30,32 @@ router.post(
   "/",
   validateEmailUsernameAndPassword,
   asyncHandler(async (req, res) => {
-    console.log(req.body);
-    const { username, email, password, avatar } = req.body;
+    const { username, email, password } = req.body;
+    const defaultAvatar = "avatar.png";
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, hashedPassword, avatar });
+    const user = await User.create({
+      username,
+      email,
+      hashedPassword,
+      avatar: defaultAvatar,
+    });
 
     const token = getUserToken(user);
     res.status(201).json({
-      user: { id: user.id },
+      user: { id: user.id, username: user.username, avatar: user.avatar },
       token,
     });
   })
 );
+
+router.get("/token", requireAuth, (req, res) => {
+  const { id, username, avatar } = req.user;
+
+  res.json({
+    id,
+    username,
+    avatar,
+  });
+});
 
 module.exports = router;
