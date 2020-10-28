@@ -22,7 +22,7 @@ const validateEmailUsernameAndPassword = [
   handleValidationErrors,
 ];
 
-router.get("/", requireAuth, (req, res) => {
+router.get("/", (req, res) => {
   res.send("success");
 });
 

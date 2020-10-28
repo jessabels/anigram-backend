@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const usersRouter = require("./routes/api/users");
 const sessionRouter = require("./routes/api/session");
+const postsRouter = require("./routes/api/posts");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api/users", usersRouter);
 app.use("/api/session", sessionRouter);
+app.use("/api/posts", postsRouter);
 
 app.use((req, res, next) => {
   const err = new Error("The requested page couldn't be found.");
