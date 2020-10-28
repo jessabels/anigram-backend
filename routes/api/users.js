@@ -48,11 +48,11 @@ router.post(
   })
 );
 
-router.get("/token", requireAuth, (req, res) => {
-  const { id, username, avatar } = req.user;
-
+router.get("/:userId", async (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+  const user = await User.findByPk(userId);
+  const { username, avatar } = user;
   res.json({
-    id,
     username,
     avatar,
   });
