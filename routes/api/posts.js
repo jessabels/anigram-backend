@@ -21,7 +21,7 @@ router.get(
         caption: post.caption,
         user: post.User.username,
         userAvatar: post.User.avatar,
-        createdAt: post.createdAt,
+        createdAt: post.createdAt.toString().split(":").slice(0, -1).join(":"),
       };
     });
     res.json(postsData);
