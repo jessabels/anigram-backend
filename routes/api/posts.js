@@ -12,9 +12,6 @@ const { asyncHandler, handleValidationErrors } = require("../../utils");
 const { Post, User, Like } = db;
 
 const validatePost = [
-  check("file")
-    .exists({ checkFalsy: true })
-    .withMessage("Please upload an image."),
   check("caption")
     .exists({ checkFalsy: true })
     .withMessage("Please include a caption."),
@@ -34,7 +31,6 @@ const s3 = new AWS.S3();
 router.get(
   "/",
   requireAuth,
-  validatePost,
   asyncHandler(async (req, res) => {
     const posts = await Post.findAll({
       include: User,
@@ -69,6 +65,7 @@ router.post(
   "/",
   upload.any(),
   requireAuth,
+  validatePost,
   fileFilter,
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
