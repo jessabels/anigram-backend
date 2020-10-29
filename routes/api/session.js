@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const db = require("../../db/models");
-const { User } = db;
+const { User, Like } = db;
 const { check } = require("express-validator");
 const { asyncHandler, handleValidationErrors } = require("../../utils");
 const { getUserToken, requireAuth } = require("../../auth");
@@ -26,6 +26,7 @@ router.post(
       where: {
         email,
       },
+      include: Like,
     });
     if (!user || !user.validatePassword(password)) {
       const err = new Error("Login failed");
@@ -37,12 +38,15 @@ router.post(
     }
 
     const token = getUserToken(user);
+    const likes = user.Likes.map((like) => like.postId);
     res.json({
       token,
       userId: user.id,
       username: user.username,
       avatar: user.avatar,
+      likes: likes,
     });
+    // res.json({ user });
   })
 );
 

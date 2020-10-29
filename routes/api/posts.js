@@ -20,10 +20,26 @@ router.get(
         imageUrl: post.imageUrl,
         caption: post.caption,
         user: post.User.username,
+        userAvatar: post.User.avatar,
+        createdAt: post.createdAt,
       };
     });
     res.json(postsData);
   })
 );
 
+router.post(
+  "/",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const { imageUrl, caption } = req.body;
+    const post = await Post.create({
+      userId: req.user.id,
+      imageUrl,
+      caption,
+    });
+
+    res.json({ post });
+  })
+);
 module.exports = router;

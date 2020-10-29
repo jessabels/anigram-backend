@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 const db = require("../../db/models");
-const { User } = db;
+const { User, Like } = db;
 const { check } = require("express-validator");
 const { asyncHandler, handleValidationErrors } = require("../../utils");
 const { getUserToken, requireAuth } = require("../../auth");
@@ -50,11 +50,18 @@ router.post(
 
 router.get("/:userId", async (req, res) => {
   const userId = parseInt(req.params.userId, 10);
-  const user = await User.findByPk(userId);
+  const user = await User.findOne({
+    where: {
+      id: userId,
+    },
+    include: Like,
+  });
+
   const { username, avatar } = user;
   res.json({
     username,
     avatar,
+    like: user.Likes,
   });
 });
 
