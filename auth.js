@@ -15,7 +15,6 @@ const getUserToken = (user) => {
   const token = jwt.sign({ data: userDataForToken }, secret, {
     expiresIn: parseInt(expiresIn, 10),
   });
-  console.log(token);
 
   return token;
 };
@@ -24,7 +23,6 @@ const restoreUser = (req, res, next) => {
   const { token } = req;
 
   if (!token) {
-    console.log("hello");
     const err = new Error("Unauthorized");
     err.status = 401;
     return next(err);
@@ -42,7 +40,6 @@ const restoreUser = (req, res, next) => {
     try {
       req.user = await User.findByPk(id);
     } catch (e) {
-      console.log("hello");
       e.status = 401;
       return next(e);
     }

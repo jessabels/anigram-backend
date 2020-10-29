@@ -41,7 +41,6 @@ router.post(
 
     const likes = user.Likes.map((like) => like.postId);
 
-    console.log(likes);
     res.json({
       token,
       userId: user.id,
@@ -49,7 +48,6 @@ router.post(
       avatar: user.avatar,
       likes: likes,
     });
-    // res.json({ user });
   })
 );
 

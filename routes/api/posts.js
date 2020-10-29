@@ -1,14 +1,40 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer();
+const { check, validationResult } = require("express-validator");
+const AWS = require("aws-sdk");
+
+const { awsKeys } = require("../../config");
 const db = require("../../db/models");
 const { requireAuth } = require("../../auth");
 const { asyncHandler, handleValidationErrors } = require("../../utils");
-
 const { Post, User, Like } = db;
+
+const validatePost = [
+  check("file")
+    .exists({ checkFalsy: true })
+    .withMessage("Please upload an image."),
+  check("caption")
+    .exists({ checkFalsy: true })
+    .withMessage("Please include a caption."),
+  handleValidationErrors,
+];
+
+//AWS
+
+AWS.config.update({
+  secretAccessKey: awsKeys.secretAccessKey,
+  accessKeyId: awsKeys.accessKeyId,
+  region: awsKeys.region,
+});
+
+const s3 = new AWS.S3();
 
 router.get(
   "/",
   requireAuth,
+  validatePost,
   asyncHandler(async (req, res) => {
     const posts = await Post.findAll({
       include: User,
@@ -28,14 +54,46 @@ router.get(
   })
 );
 
+const fileFilter = (req, res, next) => {
+  // CUSTOM CHECK FOR THE MIME TYPES
+  const file = req.files[0];
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    next();
+  } else {
+    next({ status: 422, errors: ["Invalid Mime Type, only JPEG and PNG"] });
+  }
+};
+
+//upload a post
 router.post(
   "/",
+  upload.any(),
   requireAuth,
+  fileFilter,
   asyncHandler(async (req, res) => {
-    const { imageUrl, caption } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return next({ status: 422, errors: errors.array() });
+    }
+
+    const file = req.files[0];
+
+    const params = {
+      Bucket: "anigram-images",
+      Key: Date.now().toString() + file.originalname, // UNIQUELY IDENTIFIES AN OBJECT IN THE BUCKET
+      Body: file.buffer,
+      ACL: "public-read",
+      ContentType: file.mimetype,
+    };
+
+    const promise = s3.upload(params).promise();
+
+    const uploadedImage = await promise;
+
+    const { caption } = req.body;
     const post = await Post.create({
       userId: req.user.id,
-      imageUrl,
+      imageUrl: uploadedImage.Location,
       caption,
     });
 
