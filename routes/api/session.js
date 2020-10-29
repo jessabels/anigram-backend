@@ -38,7 +38,10 @@ router.post(
     }
 
     const token = getUserToken(user);
+
     const likes = user.Likes.map((like) => like.postId);
+
+    console.log(likes);
     res.json({
       token,
       userId: user.id,

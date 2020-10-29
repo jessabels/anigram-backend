@@ -57,11 +57,13 @@ router.get("/:userId", async (req, res) => {
     include: Like,
   });
 
+  const likes = user.Likes.map((like) => like.postId);
+
   const { username, avatar } = user;
   res.json({
     username,
     avatar,
-    like: user.Likes,
+    likes,
   });
 });
 
