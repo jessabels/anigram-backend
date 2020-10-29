@@ -4,7 +4,7 @@ const db = require("../../db/models");
 const { requireAuth } = require("../../auth");
 const { asyncHandler, handleValidationErrors } = require("../../utils");
 
-const { Post, User } = db;
+const { Post, User, Like } = db;
 
 router.get(
   "/",
@@ -42,4 +42,36 @@ router.post(
     res.json({ post });
   })
 );
+
+//like a post
+router.post(
+  "/:postId/likes",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const like = await Like.create({
+      userId: req.user.id,
+      postId: req.params.postId,
+    });
+
+    res.json({ like });
+  })
+);
+
+//remove a like from a post
+router.delete(
+  "/:postId/likes",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const like = await Like.findOne({
+      where: {
+        postId: req.params.postId,
+        userId: req.user.id,
+      },
+    });
+    like.destroy();
+    const likes = await Like.findAll();
+    res.json({ likes });
+  })
+);
+
 module.exports = router;
