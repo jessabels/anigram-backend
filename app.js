@@ -12,6 +12,11 @@ app.use(cors({ origin: true }));
 
 app.use(morgan("dev"));
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({ message: "hi" });
+});
+
 app.use("/api/users", usersRouter);
 app.use("/api/session", sessionRouter);
 app.use("/api/posts", postsRouter);
