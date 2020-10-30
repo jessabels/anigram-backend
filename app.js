@@ -8,7 +8,7 @@ const postsRouter = require("./routes/api/posts");
 
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors({}));
 
 app.use(morgan("dev"));
 app.use(express.json());
