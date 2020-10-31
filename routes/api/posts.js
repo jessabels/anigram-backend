@@ -51,6 +51,32 @@ router.get(
   })
 );
 
+router.get(
+  "/myPosts",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const posts = await Post.findAll({
+      include: [User, Like],
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    const postsData = posts.map((post) => {
+      return {
+        postId: post.id,
+        imageUrl: post.imageUrl,
+        caption: post.caption,
+        user: post.User.username,
+        userAvatar: post.User.avatar,
+        likes: post.Likes.length,
+        createdAt: post.createdAt.toString().split(":").slice(0, -1).join(":"),
+      };
+    });
+    res.json(postsData);
+  })
+);
+
 const fileFilter = (req, res, next) => {
   // CUSTOM CHECK FOR THE MIME TYPES
   const file = req.files[0];
