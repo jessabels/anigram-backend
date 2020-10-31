@@ -33,7 +33,7 @@ router.get(
   requireAuth,
   asyncHandler(async (req, res) => {
     const posts = await Post.findAll({
-      include: User,
+      include: [User, Like],
     });
 
     const postsData = posts.map((post) => {
@@ -43,6 +43,7 @@ router.get(
         caption: post.caption,
         user: post.User.username,
         userAvatar: post.User.avatar,
+        likes: post.Likes.length,
         createdAt: post.createdAt.toString().split(":").slice(0, -1).join(":"),
       };
     });
