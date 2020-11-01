@@ -68,6 +68,7 @@ router.get(
         imageUrl: post.imageUrl,
         caption: post.caption,
         user: post.User.username,
+        userId: post.User.id,
         userAvatar: post.User.avatar,
         likes: post.Likes.length,
         createdAt: post.createdAt.toString().split(":").slice(0, -1).join(":"),

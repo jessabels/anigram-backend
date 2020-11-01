@@ -68,7 +68,6 @@ router.get("/:userId", async (req, res) => {
 });
 
 router.put("/:userId", requireAuth, async (req, res) => {
-  console.log(req.body.avatar);
   const userId = parseInt(req.params.userId, 10);
   const user = await User.findOne({
     where: {
