@@ -31,7 +31,8 @@ router.post(
   validateEmailUsernameAndPassword,
   asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
-    const defaultAvatar = "avatar.png";
+    const defaultAvatar =
+      "https://anigram-images.s3.amazonaws.com/avatars/default.PNG";
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
