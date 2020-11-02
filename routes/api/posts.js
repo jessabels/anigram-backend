@@ -57,6 +57,7 @@ router.get(
   requireAuth,
   asyncHandler(async (req, res) => {
     const posts = await Post.findAll({
+      order: [["createdAt", "DESC"]],
       include: [User, Like],
       where: {
         userId: req.user.id,
