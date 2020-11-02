@@ -14,11 +14,13 @@ const validateEmailUsernameAndPassword = [
     .withMessage("Please provide a username."),
   check("email")
     .exists({ checkFalsy: true })
-    .isEmail()
     .withMessage("Please provide a valid email."),
   check("password")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a password."),
+  check("confirmPassword")
+    .exists({ checkFalsy: true })
+    .withMessage("Please confirm your password."),
   handleValidationErrors,
 ];
 
@@ -30,7 +32,7 @@ router.post(
   "/",
   validateEmailUsernameAndPassword,
   asyncHandler(async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
     const defaultAvatar =
       "https://anigram-images.s3.amazonaws.com/avatars/default.PNG";
     const hashedPassword = await bcrypt.hash(password, 10);

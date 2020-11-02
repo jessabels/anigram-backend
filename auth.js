@@ -30,7 +30,6 @@ const restoreUser = (req, res, next) => {
 
   return jwt.verify(token, secret, null, async (err, jwtPayload) => {
     if (err) {
-      console.log(err);
       err.status = 401;
       return next(err);
     }

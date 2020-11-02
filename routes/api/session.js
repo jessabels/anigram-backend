@@ -10,7 +10,6 @@ const { getUserToken, requireAuth } = require("../../auth");
 const validateEmailAndPassword = [
   check("email")
     .exists({ checkFalsy: true })
-    .isEmail()
     .withMessage("Please provide a valid email."),
   check("password")
     .exists({ checkFalsy: true })

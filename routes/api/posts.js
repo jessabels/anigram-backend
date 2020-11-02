@@ -34,6 +34,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const posts = await Post.findAll({
       include: [User, Like],
+      order: [["createdAt", "DESC"]],
     });
 
     const postsData = posts.map((post) => {

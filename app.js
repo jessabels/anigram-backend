@@ -42,8 +42,7 @@ app.use(function (err, _req, res, _next) {
     res.set("WWW-Authenticate", "Bearer");
   }
   res.json({
-    message: err.message,
-    error: JSON.parse(JSON.stringify(err)),
+    error: err.errors,
   });
 });
 
