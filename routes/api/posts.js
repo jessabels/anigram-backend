@@ -128,6 +128,23 @@ router.post(
   })
 );
 
+//delete a post
+
+router.delete(
+  "/:postId",
+  // requireAuth,
+  asyncHandler(async (req, res) => {
+    const post = await Post.findOne({
+      where: {
+        id: req.params.postId,
+      },
+    });
+    post.destroy();
+    const posts = await Post.findAll();
+    res.json({ posts });
+  })
+);
+
 //like a post
 router.post(
   "/:postId/likes",
