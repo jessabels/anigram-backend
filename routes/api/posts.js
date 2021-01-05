@@ -132,7 +132,7 @@ router.post(
 
 router.delete(
   "/:postId",
-  // requireAuth,
+  requireAuth,
   asyncHandler(async (req, res) => {
     const post = await Post.findOne({
       where: {
